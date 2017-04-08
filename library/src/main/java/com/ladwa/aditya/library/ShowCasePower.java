@@ -6,6 +6,7 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 
@@ -14,6 +15,9 @@ import android.widget.FrameLayout;
  * Created by Aditya on 08-Apr-17.
  */
 public class ShowCasePower extends FrameLayout {
+
+    private static final String TAG = ShowCasePower.class.getSimpleName();
+
     public ShowCasePower(@NonNull Context context) {
         super(context);
         init(context);
@@ -43,6 +47,6 @@ public class ShowCasePower extends FrameLayout {
      */
     private void init(Context context) {
         LayoutInflater.from(context).inflate(R.layout.content_details, this, true);
-
+        Log.d(TAG, "Called");
     }
 }
