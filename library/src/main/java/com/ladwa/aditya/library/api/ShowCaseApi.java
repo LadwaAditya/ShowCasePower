@@ -1,8 +1,11 @@
 package com.ladwa.aditya.library.api;
 
 import android.app.Activity;
+import android.graphics.Point;
+import android.view.View;
 
 import com.ladwa.aditya.library.ShowCasePower;
+import com.ladwa.aditya.library.target.Target;
 
 /**
  * Defines the Business logic of the CustomView
@@ -45,6 +48,15 @@ public class ShowCaseApi {
          */
         ShowCasePower.Builder setContent(CharSequence content);
 
+
+        /**
+         * Set the target to be highlighted
+         *
+         * @param target
+         * @return
+         */
+        ShowCasePower.Builder setTarget(View target);
+
     }
 
     /**
@@ -61,12 +73,14 @@ public class ShowCaseApi {
 
         /**
          * Set title for the View to be displayed
+         *
          * @param title
          */
         void setTitle(CharSequence title);
 
         /**
          * Set Content Description for the View
+         *
          * @param content
          */
         void setContent(CharSequence content);
@@ -75,5 +89,18 @@ public class ShowCaseApi {
          * Apply the layout parameters for the view
          */
         void applyLayoutParams();
+
+        /**
+         * Set the target view
+         * @param target
+         */
+        void setTarget(Target target);
+
+        /**
+         * Set the positions to global variables
+         * @param positions
+         */
+        void setPositions(Point positions);
+
     }
 }

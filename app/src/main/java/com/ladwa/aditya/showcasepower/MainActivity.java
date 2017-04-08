@@ -2,15 +2,22 @@ package com.ladwa.aditya.showcasepower;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.TextView;
 
 import com.ladwa.aditya.library.ShowCasePower;
 
 public class MainActivity extends AppCompatActivity {
 
+    private TextView textView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        new ShowCasePower.Builder(this).setTitle("title").setContent("Content").show();
+        textView = (TextView) findViewById(R.id.txt_demo);
+        new ShowCasePower.Builder(this)
+                .setTarget(textView)
+                .setTitle("title")
+                .setContent("Content").show();
     }
 }
