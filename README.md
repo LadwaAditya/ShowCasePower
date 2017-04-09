@@ -1,6 +1,6 @@
 # ShowCasePower
 
-![](http://i.imgur.com/YZEV0gd.gifv)
+![](http://i.imgur.com/YZEV0gd.gif)
 
 ## Usage
 ```java
