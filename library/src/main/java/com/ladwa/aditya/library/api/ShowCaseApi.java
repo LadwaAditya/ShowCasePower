@@ -21,30 +21,30 @@ public class ShowCaseApi {
         /**
          * Displays the view
          *
-         * @return
+         * @return The {@link ShowCasePower} view after drawing
          */
         ShowCasePower show();
 
         /**
          * Returns the activity from where {@link ShowCasePower} is called
          *
-         * @return
+         * @return Activity from where {@link ShowCasePower} is called
          */
         Activity getActivity();
 
         /**
          * Set the title of the view
          *
-         * @param title
-         * @return
+         * @param title Title to be displayed
+         * @return Builder
          */
         ShowCasePower.Builder setTitle(CharSequence title);
 
         /**
          * Sets the Content of the View
          *
-         * @param content
-         * @return
+         * @param content Description to be displayed
+         * @return Builder
          */
         ShowCasePower.Builder setContent(CharSequence content);
 
@@ -52,8 +52,8 @@ public class ShowCaseApi {
         /**
          * Set the target to be highlighted
          *
-         * @param target
-         * @return
+         * @param target {@link Target} to be displayed
+         * @return Builder
          */
         ShowCasePower.Builder setTarget(View target);
 
@@ -66,22 +66,22 @@ public class ShowCaseApi {
         /**
          * Called by the {@link com.ladwa.aditya.library.ShowCasePower.Builder} to show view
          *
-         * @param builder
-         * @return
+         * @param builder Builder class {@link com.ladwa.aditya.library.ShowCasePower.Builder}
+         * @return True if View is displayed
          */
         boolean show(ShowCasePower.Builder builder);
 
         /**
          * Set title for the View to be displayed
          *
-         * @param title
+         * @param title The title for the {@link Target}
          */
         void setTitle(CharSequence title);
 
         /**
          * Set Content Description for the View
          *
-         * @param content
+         * @param content Description for the {@link Target}
          */
         void setContent(CharSequence content);
 
@@ -92,13 +92,13 @@ public class ShowCaseApi {
 
         /**
          * Set the target view
-         * @param target
+         * @param target An {@link Target} object
          */
         void setTarget(Target target);
 
         /**
          * Set the positions to global variables
-         * @param positions
+         * @param positions  X and Y positions of the views
          */
         void setPositions(Point positions);
 
