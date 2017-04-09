@@ -37,8 +37,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btn_reveal:
                 new ShowCasePower.Builder(this)
                         .setTarget(mCurrentView)
-                        .setTitle("Title")
-                        .setContent("Content").show();
+                        .setTitle("Reveal Effect")
+                        .setContent("The description of the view").show();
                 break;
             case R.id.txt_bottom:
                 mCurrentView = txtBottom;
