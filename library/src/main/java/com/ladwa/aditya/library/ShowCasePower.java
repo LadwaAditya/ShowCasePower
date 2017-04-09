@@ -1,10 +1,16 @@
 package com.ladwa.aditya.library;
 
+import android.animation.Animator;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -14,6 +20,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
@@ -21,6 +28,8 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.ladwa.aditya.library.api.ShowCaseApi;
+import com.ladwa.aditya.library.shape.Circle;
+import com.ladwa.aditya.library.shape.Shape;
 import com.ladwa.aditya.library.target.Target;
 import com.ladwa.aditya.library.target.ViewTarget;
 
@@ -28,9 +37,11 @@ import com.ladwa.aditya.library.target.ViewTarget;
  * A Custom {@link android.widget.FrameLayout} that represents Showcasepower
  * Created by Aditya on 08-Apr-17.
  */
-public class ShowCasePower extends FrameLayout implements ShowCaseApi.ShowCasePowerContract {
+public class ShowCasePower extends FrameLayout implements ShowCaseApi.ShowCasePowerContract,View.OnClickListener {
 
     private static final String TAG = ShowCasePower.class.getSimpleName();
+    private static final String DEFAULT_MASK_COLOUR = "#dd335075";
+    private static final int DEFAULT_SHAPE_PADDING = 15;
 
     //Views
     private TextView mTxtTitle, mTxtContents;
@@ -44,10 +55,14 @@ public class ShowCasePower extends FrameLayout implements ShowCaseApi.ShowCasePo
     private int mGravity;
     private int mContentBottomMargin;
     private int mContentTopMargin;
-    private int mShapePadding = 15;
+    private int mBackgroundColor;
+    private Paint mEraser;
+    private Shape mShape;
 
     //View listener
     private UpdateLayoutListener mUpdateLayoutListener;
+    private Bitmap mBitmap;
+    private Canvas mCanvas;
 
 
     public ShowCasePower(@NonNull Context context) {
@@ -84,6 +99,7 @@ public class ShowCasePower extends FrameLayout implements ShowCaseApi.ShowCasePo
         mUpdateLayoutListener = new UpdateLayoutListener();
         getViewTreeObserver().addOnGlobalLayoutListener(mUpdateLayoutListener);
 
+        mBackgroundColor = Color.parseColor(DEFAULT_MASK_COLOUR);
 
         View content = LayoutInflater.from(context).inflate(R.layout.content_details, this, true);
 
@@ -93,8 +109,7 @@ public class ShowCasePower extends FrameLayout implements ShowCaseApi.ShowCasePo
         mTxtContents = (TextView) content.findViewById(R.id.txt_content);
         mBtnDismiss = (Button) content.findViewById(R.id.btn_dismiss);
 
-
-
+        mBtnDismiss.setOnClickListener(this);
         Log.d(TAG, "Initialized");
     }
 
@@ -107,7 +122,38 @@ public class ShowCasePower extends FrameLayout implements ShowCaseApi.ShowCasePo
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        Log.d(TAG,"onDraw");
+
+        final int width = getMeasuredWidth();
+        final int height = getMeasuredHeight();
+
+        if (mBitmap == null || mCanvas == null) {
+            if (mBitmap != null) mBitmap.recycle();
+            mBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            mCanvas = new Canvas(mBitmap);
+        }
+
+        mCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+        mCanvas.drawColor(mBackgroundColor);
+
+        if (mEraser == null) {
+            mEraser = new Paint();
+            mEraser.setColor(0xFFFFFFFF);
+            mEraser.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+            mEraser.setFlags(Paint.ANTI_ALIAS_FLAG);
+        }
+
+        mShape.draw(mCanvas, mEraser, mXpos, mYpos, DEFAULT_SHAPE_PADDING);
+        canvas.drawBitmap(mBitmap, 0, 0, null);
+        createReveal();
+        Log.d(TAG, "onDraw");
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void createReveal() {
+        Animator circularReveal = ViewAnimationUtils.createCircularReveal(this, mXpos, mYpos, 0, Math.max(this.getWidth(), this.getHeight()));
+        circularReveal.setDuration(400);
+        circularReveal.start();
+        mContentBox.setVisibility(VISIBLE);
     }
 
     @Override
@@ -169,14 +215,19 @@ public class ShowCasePower extends FrameLayout implements ShowCaseApi.ShowCasePo
             int midPoint = height / 2;
             int yPos = targetPoint.y;
 
+            if (mShape != null) {
+                mShape.updateTarget(mTarget);
+                radius = mShape.getHeight() / 2;
+            }
+
             if (yPos > midPoint) {
                 //Top
                 mContentTopMargin = 0;
-                mContentBottomMargin = (height - yPos) + radius + mShapePadding;
+                mContentBottomMargin = (height - yPos) + radius + DEFAULT_SHAPE_PADDING;
                 mGravity = Gravity.BOTTOM;
             } else {
                 // Below
-                mContentTopMargin = yPos + radius + mShapePadding;
+                mContentTopMargin = yPos + radius + DEFAULT_SHAPE_PADDING;
                 mContentBottomMargin = 0;
                 mGravity = Gravity.TOP;
             }
@@ -189,6 +240,35 @@ public class ShowCasePower extends FrameLayout implements ShowCaseApi.ShowCasePo
     public void setPositions(Point positions) {
         mXpos = positions.x;
         mYpos = positions.y;
+    }
+
+    @Override
+    public void setShape(Shape shape) {
+        mShape = shape;
+    }
+
+    @Override
+    public void removeFromWindow() {
+        //Remove view from Window
+        if (getParent() != null && getParent() instanceof ViewGroup) {
+            ((ViewGroup) getParent()).removeView(this);
+        }
+        //Clear variables
+        if (mBitmap != null) {
+            mBitmap.recycle();
+            mBitmap = null;
+        }
+        mEraser = null;
+        mCanvas = null;
+
+        //Clear listeners
+        getViewTreeObserver().removeGlobalOnLayoutListener(mUpdateLayoutListener);
+        mUpdateLayoutListener = null;
+    }
+
+    @Override
+    public void onClick(View v) {
+        removeFromWindow();
     }
 
     /**
@@ -216,6 +296,7 @@ public class ShowCasePower extends FrameLayout implements ShowCaseApi.ShowCasePo
         }
 
         private ShowCasePower build() {
+            showCasePower.setShape(new Circle(showCasePower.mTarget));
             return showCasePower;
         }
 

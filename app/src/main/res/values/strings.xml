@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">ShowCasePower</string>
+    <string name="reveal">Reveal</string>
+    <string name="demo">Demo</string>
+    <string name="bottom_text">Bottom Text</string>
+    <string name="hello_world">Hello World</string>
 </resources>

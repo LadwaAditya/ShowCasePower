@@ -5,6 +5,7 @@ import android.graphics.Point;
 import android.view.View;
 
 import com.ladwa.aditya.library.ShowCasePower;
+import com.ladwa.aditya.library.shape.Shape;
 import com.ladwa.aditya.library.target.Target;
 
 /**
@@ -92,15 +93,29 @@ public class ShowCaseApi {
 
         /**
          * Set the target view
+         *
          * @param target An {@link Target} object
          */
         void setTarget(Target target);
 
         /**
          * Set the positions to global variables
-         * @param positions  X and Y positions of the views
+         *
+         * @param positions X and Y positions of the views
          */
         void setPositions(Point positions);
+
+        /**
+         * Sets the shape of highlight to be displayed to a {@link Target} View
+         *
+         * @param shape The type of {@link Shape}
+         */
+        void setShape(Shape shape);
+
+        /**
+         * Removes {@link ShowCasePower} from the window
+         */
+        void removeFromWindow();
 
     }
 }
