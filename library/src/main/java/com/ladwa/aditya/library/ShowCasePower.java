@@ -37,7 +37,7 @@ import com.ladwa.aditya.library.target.ViewTarget;
  * A Custom {@link android.widget.FrameLayout} that represents Showcasepower
  * Created by Aditya on 08-Apr-17.
  */
-public class ShowCasePower extends FrameLayout implements ShowCaseApi.ShowCasePowerContract,View.OnClickListener {
+public class ShowCasePower extends FrameLayout implements ShowCaseApi.ShowCasePowerContract, View.OnClickListener {
 
     private static final String TAG = ShowCasePower.class.getSimpleName();
     private static final String DEFAULT_MASK_COLOUR = "#dd335075";
@@ -94,7 +94,6 @@ public class ShowCasePower extends FrameLayout implements ShowCaseApi.ShowCasePo
      */
     private void init(Context context) {
         setWillNotDraw(false);
-
         //Set up layout listener
         mUpdateLayoutListener = new UpdateLayoutListener();
         getViewTreeObserver().addOnGlobalLayoutListener(mUpdateLayoutListener);
