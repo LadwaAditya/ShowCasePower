@@ -137,6 +137,7 @@ public class ShowCasePower extends FrameLayout implements ShowCaseApi.ShowCasePo
         if (mEraser == null) {
             mEraser = new Paint();
             mEraser.setColor(0xFFFFFFFF);
+            // Xfermode set to CLEAR to make draw shape to be seen through the view
             mEraser.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
             mEraser.setFlags(Paint.ANTI_ALIAS_FLAG);
         }
