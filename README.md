@@ -1,5 +1,7 @@
 # ShowCasePower
 
+![](http://i.imgur.com/YZEV0gd.gifv,"Demo")
+
 ## Usage
 ```java
  new ShowCasePower.Builder(this)
